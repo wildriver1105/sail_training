@@ -1,0 +1,16 @@
+# 통합 대상 앱들은 각자 독립 GitHub repo로 관리되므로 허브 git에서 제외
+boat_drive/
+trimmer/
+knots/
+sea_nav/
+sailing_tactics/
+
+# 의존성 / 빌드 산출물
+node_modules/
+
+# OS / 에디터
+.DS_Store
+*.log
+npm-debug.log*
+.vscode/
+.idea/

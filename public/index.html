@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sail Training Hub</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛵</text></svg>" />
+</head>
+<body>
+  <div class="sky"></div>
+  <main>
+    <header class="hero">
+      <h1><span class="wave">⛵</span> Sail Training</h1>
+      <p class="tagline">세일링 트레이닝 앱 모음 — 카드를 눌러 시작하세요</p>
+      <p class="host-hint" id="hostHint"></p>
+    </header>
+
+    <section class="grid" id="grid" aria-live="polite">
+      <p class="loading">불러오는 중…</p>
+    </section>
+
+    <footer class="foot">
+      <span id="footHost"></span>
+    </footer>
+  </main>
+
+  <script>
+    // 현재 접속한 호스트명 기준으로 각 앱 링크를 만든다.
+    // localhost로 보면 localhost:PORT, sail.local로 보면 sail.local:PORT 로 자동 매칭.
+    const host = location.hostname || 'localhost';
+
+    function card(app) {
+      const url = `http://${host}:${app.port}`;
+      const el = document.createElement('a');
+      el.className = 'card';
+      el.href = url;
+      el.style.setProperty('--accent', app.accent || '#1f6feb');
+      el.innerHTML = `
+        <div class="card-icon">${app.icon || '⛵'}</div>
+        <div class="card-body">
+          <h2>${app.title}</h2>
+          <p class="card-sub">${app.subtitle || ''}</p>
+          <p class="card-desc">${app.desc || ''}</p>
+        </div>
+        <div class="card-foot">
+          <span class="port">:${app.port}</span>
+          <span class="go">열기 →</span>
+        </div>`;
+      return el;
+    }
+
+    fetch('/config.json')
+      .then(r => r.json())
+      .then(cfg => {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        (cfg.apps || []).forEach(app => grid.appendChild(card(app)));
+        const label = `${host}:${cfg.launcherPort || location.port || 3000}`;
+        document.getElementById('hostHint').textContent =
+          `이 화면 주소: http://${label}`;
+        document.getElementById('footHost').textContent =
+          `같은 WiFi의 다른 기기는 http://${cfg.host || 'sail.local'}:${cfg.launcherPort || 3000} 으로 접속하세요`;
+      })
+      .catch(err => {
+        document.getElementById('grid').innerHTML =
+          `<p class="loading">설정을 불러오지 못했습니다: ${err}</p>`;
+      });
+  </script>
+</body>
+</html>

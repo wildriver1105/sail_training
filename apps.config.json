@@ -1,0 +1,57 @@
+{
+  "host": "sail.local",
+  "launcherPort": 3000,
+  "apps": [
+    {
+      "name": "boat_drive",
+      "dir": "boat_drive",
+      "port": 3001,
+      "title": "Boat Drive",
+      "subtitle": "보트 조종 시뮬레이터",
+      "desc": "물 물리·바람·계류를 다루는 2D/3D 보트 조종 연습",
+      "icon": "⛵",
+      "accent": "#1f6feb"
+    },
+    {
+      "name": "trimmer",
+      "dir": "trimmer",
+      "port": 3002,
+      "title": "Sail Trimmer",
+      "subtitle": "세일 트림 시뮬레이터",
+      "desc": "바람·양력·텔테일을 3D로 보며 메인세일 트림 익히기",
+      "icon": "🪁",
+      "accent": "#2da44e"
+    },
+    {
+      "name": "knots",
+      "dir": "knots",
+      "port": 3003,
+      "title": "Knots",
+      "subtitle": "3D 매듭 학습",
+      "desc": "6가지 세일링 매듭을 단계별·연속 애니메이션으로 학습",
+      "icon": "🪢",
+      "accent": "#bf8700"
+    },
+    {
+      "name": "sea_nav",
+      "dir": "sea_nav",
+      "port": 3004,
+      "title": "Sea Nav",
+      "subtitle": "해도 내비게이션",
+      "desc": "실제 해도 타일·날씨·AIS로 연안 항해 플로팅 연습",
+      "icon": "🧭",
+      "accent": "#8250df"
+    },
+    {
+      "name": "sailing_tactics",
+      "dir": "sailing_tactics",
+      "port": 3005,
+      "title": "Sailing Tactics",
+      "subtitle": "전술 보드",
+      "desc": "칠판 스타일 세일링 전술 보드 — Magic Move 프레임 전환, 발표·편집 모드",
+      "icon": "📋",
+      "accent": "#cf222e",
+      "staticExport": true
+    }
+  ]
+}
