@@ -9,7 +9,8 @@
     "build": "node scripts/build-all.mjs",
     "dev": "node scripts/run-all.mjs dev",
     "start": "node scripts/run-all.mjs start",
-    "stop": "node scripts/stop-all.mjs"
+    "stop": "node scripts/stop-all.mjs",
+    "forward": "node scripts/forward80.mjs"
   },
   "dependencies": {
     "concurrently": "^9.1.2",
