@@ -56,11 +56,18 @@
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
         (cfg.apps || []).forEach(app => grid.appendChild(card(app)));
-        const label = `${host}:${cfg.launcherPort || location.port || 3000}`;
-        document.getElementById('hostHint').textContent =
-          `이 화면 주소: http://${label}`;
-        document.getElementById('footHost').textContent =
-          `같은 WiFi의 다른 기기는 http://${cfg.host || 'sail.local'}:${cfg.launcherPort || 3000} 으로 접속하세요`;
+        const port = cfg.launcherPort || location.port || 3000;
+        document.getElementById('hostHint').textContent = `이 화면 주소: http://${host}:${port}`;
+
+        const foot = document.getElementById('footHost');
+        const mdnsUrl = `http://${cfg.host || 'sail.local'}:${port}`;
+        if (cfg.lanIP) {
+          foot.innerHTML =
+            `같은 WiFi의 다른 기기는 <b>http://${cfg.lanIP}:${port}</b> 로 접속하세요` +
+            `<br><span style="opacity:.7">(${mdnsUrl} 도 가능하지만, 일부 네트워크에선 LAN IP가 더 확실합니다)</span>`;
+        } else {
+          foot.textContent = `같은 WiFi의 다른 기기는 ${mdnsUrl} 으로 접속하세요`;
+        }
       })
       .catch(err => {
         document.getElementById('grid').innerHTML =

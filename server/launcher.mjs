@@ -4,6 +4,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, normalize, extname } from 'node:path';
+import os from 'node:os';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -12,6 +13,21 @@ const CONFIG = join(ROOT, 'apps.config.json');
 
 const cfg = JSON.parse(await readFile(CONFIG, 'utf8'));
 const PORT = cfg.launcherPort || 3000;
+
+// 현재 머신의 LAN IPv4 — `.local` 해석이 불안정한 네트워크에서 직접 접속용 폴백 주소.
+function lanIPv4() {
+  const ifaces = os.networkInterfaces();
+  const order = ['en0', 'en1', ...Object.keys(ifaces)];
+  const seen = new Set();
+  for (const name of order) {
+    if (seen.has(name)) continue;
+    seen.add(name);
+    for (const ni of ifaces[name] || []) {
+      if (ni.family === 'IPv4' && !ni.internal) return ni.address;
+    }
+  }
+  return null;
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -33,10 +49,12 @@ const server = createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
     let pathname = decodeURIComponent(url.pathname);
 
-    // 설정은 항상 최신 파일에서 읽어 노출 (앱 추가 시 재시작 불필요)
+    // 설정은 항상 최신 파일에서 읽어 노출 (앱 추가 시 재시작 불필요).
+    // 현재 LAN IP를 함께 실어 보내 페이지가 직접 접속 주소를 안내할 수 있게 한다.
     if (pathname === '/config.json') {
-      const fresh = await readFile(CONFIG, 'utf8');
-      return send(res, 200, fresh, MIME['.json']);
+      const fresh = JSON.parse(await readFile(CONFIG, 'utf8'));
+      fresh.lanIP = lanIPv4();
+      return send(res, 200, JSON.stringify(fresh), MIME['.json']);
     }
 
     if (pathname === '/') pathname = '/index.html';
@@ -54,5 +72,8 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`[launcher] http://localhost:${PORT}  (LAN: http://${cfg.host || 'sail.local'}:${PORT})`);
+  const ip = lanIPv4();
+  console.log(`[launcher] http://localhost:${PORT}`);
+  console.log(`[launcher] 다른 기기: http://${cfg.host || 'sail.local'}:${PORT}` +
+    (ip ? `  또는 http://${ip}:${PORT}  (← .local 안 잡히면 이 주소)` : ''));
 });
