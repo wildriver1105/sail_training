@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Sail training hub — boat_drive, trimmer, knots, sea_nav를 한 곳에서 실행하고 mDNS(sail.local)로 같은 WiFi에 노출",
   "scripts": {
+    "clone": "node scripts/clone-apps.mjs",
     "setup": "node scripts/setup.mjs",
     "build": "node scripts/build-all.mjs",
     "dev": "node scripts/run-all.mjs dev",

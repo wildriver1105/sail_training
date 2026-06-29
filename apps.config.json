@@ -5,6 +5,7 @@
     {
       "name": "boat_drive",
       "dir": "boat_drive",
+      "repo": "https://github.com/wildriver1105/boat_drive.git",
       "port": 3001,
       "title": "Boat Drive",
       "subtitle": "보트 조종 시뮬레이터",
@@ -15,6 +16,7 @@
     {
       "name": "trimmer",
       "dir": "trimmer",
+      "repo": "https://github.com/wildriver1105/trimmer.git",
       "port": 3002,
       "title": "Sail Trimmer",
       "subtitle": "세일 트림 시뮬레이터",
@@ -25,6 +27,7 @@
     {
       "name": "knots",
       "dir": "knots",
+      "repo": "https://github.com/wildriver1105/knots.git",
       "port": 3003,
       "title": "Knots",
       "subtitle": "3D 매듭 학습",
@@ -35,6 +38,7 @@
     {
       "name": "sea_nav",
       "dir": "sea_nav",
+      "repo": "https://github.com/wildriver1105/sea_nav.git",
       "port": 3004,
       "title": "Sea Nav",
       "subtitle": "해도 내비게이션",
@@ -45,6 +49,7 @@
     {
       "name": "sailing_tactics",
       "dir": "sailing_tactics",
+      "repo": "https://github.com/wildriver1105/sailing_tactics.git",
       "port": 3005,
       "title": "Sailing Tactics",
       "subtitle": "전술 보드",
