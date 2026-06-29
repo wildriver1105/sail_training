@@ -8,7 +8,8 @@
     "setup": "node scripts/setup.mjs",
     "build": "node scripts/build-all.mjs",
     "dev": "node scripts/run-all.mjs dev",
-    "start": "node scripts/run-all.mjs start"
+    "start": "node scripts/run-all.mjs start",
+    "stop": "node scripts/stop-all.mjs"
   },
   "dependencies": {
     "concurrently": "^9.1.2",

@@ -47,8 +47,17 @@ npm start
 | `npm run build` | 4개 앱 `next build` 일괄 |
 | `npm run dev` | 4개 앱 `next dev` + 런처 + mDNS 동시 실행 |
 | `npm start` | 4개 앱 `next start`(빌드본) + 런처 + mDNS 동시 실행 |
+| `npm run stop` | 허브가 띄운 프로세스(런처·mDNS·앱) 일괄 종료 |
 
-Ctrl+C 한 번으로 모든 프로세스가 함께 종료됩니다.
+포그라운드로 실행했다면 Ctrl+C 한 번으로 모두 종료됩니다. 백그라운드로 띄웠거나
+다른 터미널에서 정리하려면 **`npm run stop`** 을 쓰세요(설정 포트의 리스너와 허브
+스크립트만 종료하며, `--dry-run`으로 무엇을 멈출지 미리 확인할 수 있습니다).
+
+특정 앱만 빼고 실행하려면 `--skip`을 씁니다(예: 다른 곳에서 이미 knots를 띄운 경우):
+
+```bash
+npm run dev -- --skip=knots
+```
 
 ## 앱 추가하기
 
