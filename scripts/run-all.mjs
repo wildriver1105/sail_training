@@ -8,9 +8,13 @@ import { loadConfig, ROOT, appPath, appExists } from './_config.mjs';
 
 const mode = (process.argv[2] || 'dev').toLowerCase();
 if (!['dev', 'start'].includes(mode)) {
-  console.error(`사용법: node scripts/run-all.mjs <dev|start> (받은 값: ${mode})`);
+  console.error(`사용법: node scripts/run-all.mjs <dev|start> [--skip=app1,app2] (받은 값: ${mode})`);
   process.exit(1);
 }
+
+// 특정 앱 제외 (예: 다른 곳에서 이미 띄운 앱) — node scripts/run-all.mjs dev --skip=knots
+const skipArg = process.argv.find((a) => a.startsWith('--skip='));
+const skip = new Set(skipArg ? skipArg.slice('--skip='.length).split(',').map((s) => s.trim()) : []);
 
 const cfg = await loadConfig();
 const palette = ['blue', 'green', 'yellow', 'magenta', 'cyan', 'red'];
@@ -19,9 +23,11 @@ const missing = cfg.apps.filter((a) => !appExists(a));
 if (missing.length) {
   console.warn(`[run] ⚠ 누락된 앱: ${missing.map((a) => a.dir).join(', ')} — mv 후 다시 실행하세요.`);
 }
+if (skip.size) console.warn(`[run] ⏭ 제외된 앱: ${[...skip].join(', ')}`);
 
 const appCommands = cfg.apps
   .filter(appExists)
+  .filter((a) => !skip.has(a.name))
   .map((app, i) => {
     let command;
     if (mode === 'start' && app.staticExport) {

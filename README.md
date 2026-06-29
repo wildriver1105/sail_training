@@ -65,12 +65,3 @@ Ctrl+C 한 번으로 모든 프로세스가 함께 종료됩니다.
   `npm run dev`는 `next dev`로 정상 동작하고, `npm start`(프로덕션)에서는 `npm run build`로
   만들어진 `out/`을 정적 서버(`scripts/serve-static.mjs`)로 띄웁니다. (Tauri 스크립트는 허브와 무관.)
 - **포트 변경**: `apps.config.json`에서 `port`만 바꾸면 됩니다(앱 파일은 건드리지 않음).
-- **머신 호스트명이 "-2"로 바뀐 적이 있다면**: 초기 버전이 Bonjour 서비스를 광고하면서 머신
-  호스트명 A-레코드까지 announce해 macOS 내장 mDNSResponder와 충돌, 이름이 `...-2.local`로
-  자동 변경됐습니다. 현재 `server/mdns.mjs`는 **`sail.local`만 응답**하고 머신 호스트명은
-  절대 건드리지 않으므로 재발하지 않습니다. 원래 이름으로 되돌리려면:
-  ```bash
-  sudo scutil --set LocalHostName "Hyuns-Silicon-MacBook-Pro"
-  sudo killall -HUP mDNSResponder   # mDNS 캐시 새로고침(선택)
-  ```
-  (System Settings → 일반 → 공유 → "로컬 호스트 이름" 편집으로도 가능)
