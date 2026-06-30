@@ -29,21 +29,6 @@
     // 현재 접속한 호스트명 기준으로 각 앱 링크를 만든다.
     // localhost로 보면 localhost:PORT, sail.local로 보면 sail.local:PORT 로 자동 매칭.
     const host = location.hostname || 'localhost';
-    const FRAME_W = 1280; // iframe 논리 너비 (축소 비율 계산 기준)
-
-    // 앱 서버가 떠 있는지 확인 (cross-origin이라 no-cors opaque; 연결되면 resolve, 거부되면 reject)
-    function probe(url) {
-      const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), 3500);
-      return fetch(url, { mode: 'no-cors', signal: ctrl.signal })
-        .then(() => true).catch(() => false).finally(() => clearTimeout(t));
-    }
-
-    // iframe 썸네일을 카드 너비에 맞춰 축소
-    function fitFrame(frame, thumb) {
-      const scale = thumb.clientWidth / FRAME_W;
-      frame.style.transform = `scale(${scale})`;
-    }
 
     function card(app) {
       const url = `http://${host}:${app.port}`;
@@ -55,39 +40,23 @@
         <div class="thumb">
           <div class="thumb-fallback">
             <span class="fb-icon">${app.icon || '⛵'}</span>
-            <span class="fb-status">미리보기 불러오는 중…</span>
+            <span class="fb-sub">${app.subtitle || ''}</span>
           </div>
-          <div class="thumb-cover" aria-hidden="true"></div>
         </div>
         <div class="card-bar">
           <span class="bar-title">${app.icon || '⛵'} ${app.title}</span>
           <span class="bar-port">:${app.port}</span>
         </div>`;
 
+      // 정적 스크린샷이 있으면(public/thumbs/<name>.png) 썸네일로 사용,
+      // 없으면 아이콘 카드로 표시. (라이브 iframe은 WebGL 앱에서 미렌더/발열 문제로 제거)
       const thumb = el.querySelector('.thumb');
-      const status = el.querySelector('.fb-status');
-
-      // 앱이 떠 있으면 라이브 iframe 썸네일, 아니면 오프라인 표시
-      probe(url).then(up => {
-        if (up) {
-          const frame = document.createElement('iframe');
-          frame.className = 'thumb-frame';
-          frame.src = url;
-          frame.loading = 'lazy';
-          frame.scrolling = 'no';
-          frame.tabIndex = -1;
-          frame.inert = true; // 포커스/키보드 등 모든 상호작용 비활성 (미리보기 전용)
-          frame.setAttribute('aria-hidden', 'true');
-          frame.setAttribute('title', app.title + ' 미리보기');
-          frame.addEventListener('load', () => el.classList.add('thumb-ready'));
-          thumb.appendChild(frame);
-          fitFrame(frame, thumb);
-          window.addEventListener('resize', () => fitFrame(frame, thumb));
-        } else {
-          el.classList.add('offline');
-          status.textContent = '실행 중이 아님 · 클릭해 열기';
-        }
-      });
+      const img = new Image();
+      img.onload = () => {
+        thumb.style.backgroundImage = `url("${img.src}")`;
+        thumb.classList.add('has-shot');
+      };
+      img.src = `/thumbs/${app.name}.png`;
       return el;
     }
 

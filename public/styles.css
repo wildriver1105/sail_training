@@ -127,23 +127,18 @@ main {
 }
 .fb-icon { font-size: 3rem; line-height: 1; }
 .fb-status { font-size: 0.8rem; }
+.fb-sub { font-size: 0.82rem; color: var(--muted); padding: 0 14px; text-align: center; }
+/* 정적 스크린샷이 들어오면 배경으로 깔고 아이콘 폴백은 숨김 */
+.thumb.has-shot { background-size: cover; background-position: top center; }
+.thumb.has-shot .thumb-fallback { display: none; }
 .card.offline .thumb { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 10px, transparent 10px 20px); }
 .card.offline .fb-icon { opacity: 0.5; }
-
-/* iframe 위 투명 오버레이 — 스크롤/드래그/터치 등 모든 입력을 흡수해 미리보기가
-   상호작용되지 않게 한다. 카드(링크) 안에 있어 클릭하면 그대로 해당 앱으로 이동. */
-.thumb-cover {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: transparent;
-}
 
 /* 상단 accent 라인 + hover시 "열기" */
 .thumb::after {
   content: "열기 →";
   position: absolute;
-  z-index: 3;
+  z-index: 2;
   right: 10px;
   bottom: 10px;
   padding: 4px 10px;
