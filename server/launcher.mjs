@@ -12,7 +12,8 @@ const PUBLIC = join(ROOT, 'public');
 const CONFIG = join(ROOT, 'apps.config.json');
 
 const cfg = JSON.parse(await readFile(CONFIG, 'utf8'));
-const PORT = cfg.launcherPort || 3000;
+// PORT 환경변수가 있으면 우선 (프리뷰/테스트가 빈 포트를 지정할 수 있게).
+const PORT = Number(process.env.PORT) || cfg.launcherPort || 3000;
 
 // 현재 머신의 LAN IPv4 — `.local` 해석이 불안정한 네트워크에서 직접 접속용 폴백 주소.
 function lanIPv4() {

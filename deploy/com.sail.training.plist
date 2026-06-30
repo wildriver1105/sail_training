@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sail Training Hub — 부팅 시 전체 스택 자동 실행 (터미널 불필요).
+  런처는 PORT=80 으로 떠서 http://sail.local 을 포트 없이 서빙하고,
+  mDNS + 5개 앱(:3001~:3005)도 함께 실행된다. root LaunchDaemon 이라
+  로그인 전에도(전원만 켜지면) 동작한다 — venus.local 방식.
+
+  설치:
+    sudo cp deploy/com.sail.training.plist /Library/LaunchDaemons/
+    sudo launchctl load -w /Library/LaunchDaemons/com.sail.training.plist
+  제거:
+    sudo launchctl unload -w /Library/LaunchDaemons/com.sail.training.plist
+    sudo rm /Library/LaunchDaemons/com.sail.training.plist
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.sail.training</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/node</string>
+    <string>/Users/Shared/sail_training/scripts/run-all.mjs</string>
+    <string>start</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/Shared/sail_training</string>
+
+  <!-- launchd는 PATH가 최소라, homebrew node/npx를 찾도록 직접 지정.
+       PORT=80 → 런처만 80번에 바인딩(앱들은 -p 플래그로 3001~3005 고정). -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PORT</key>
+    <string>80</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <!-- 앱이 즉시 죽고 재시작 반복하는 타이트 루프 방지 -->
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
+
+  <key>StandardOutPath</key>
+  <string>/Users/Shared/sail_training/deploy/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/Shared/sail_training/deploy/launchd.err.log</string>
+</dict>
+</plist>
