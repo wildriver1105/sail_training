@@ -130,11 +130,20 @@ main {
 .card.offline .thumb { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 10px, transparent 10px 20px); }
 .card.offline .fb-icon { opacity: 0.5; }
 
+/* iframe 위 투명 오버레이 — 스크롤/드래그/터치 등 모든 입력을 흡수해 미리보기가
+   상호작용되지 않게 한다. 카드(링크) 안에 있어 클릭하면 그대로 해당 앱으로 이동. */
+.thumb-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+}
+
 /* 상단 accent 라인 + hover시 "열기" */
 .thumb::after {
   content: "열기 →";
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   right: 10px;
   bottom: 10px;
   padding: 4px 10px;

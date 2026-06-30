@@ -57,6 +57,7 @@
             <span class="fb-icon">${app.icon || '⛵'}</span>
             <span class="fb-status">미리보기 불러오는 중…</span>
           </div>
+          <div class="thumb-cover" aria-hidden="true"></div>
         </div>
         <div class="card-bar">
           <span class="bar-title">${app.icon || '⛵'} ${app.title}</span>
@@ -75,6 +76,7 @@
           frame.loading = 'lazy';
           frame.scrolling = 'no';
           frame.tabIndex = -1;
+          frame.inert = true; // 포커스/키보드 등 모든 상호작용 비활성 (미리보기 전용)
           frame.setAttribute('aria-hidden', 'true');
           frame.setAttribute('title', app.title + ' 미리보기');
           frame.addEventListener('load', () => el.classList.add('thumb-ready'));
